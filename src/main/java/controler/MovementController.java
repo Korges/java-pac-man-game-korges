@@ -46,33 +46,19 @@ public class MovementController {
 
         scene.setOnKeyPressed(event -> {
             if (moved) {
-                int x = (int) hostSquare.getTranslateX();
-                int y = (int) hostSquare.getTranslateY();
                 switch (event.getCode()) {
 
                     case W:
-                        if (isAbleToMoveUp(hostSquare, x, y)) {
-                            direction = Direction.UP;
-                            game.getPlayer().setDirection(Direction.UP);
-                        }
+                        direction = Direction.UP;
                         break;
                     case S:
-                        if (isAbleToMoveDown(hostSquare, x, y)) {
-                            direction = Direction.DOWN;
-                            game.getPlayer().setDirection(Direction.DOWN);
-                        }
+                        direction = Direction.DOWN;
                         break;
                     case A:
-                        if (isAbleToMoveLeft(hostSquare, x, y)) {
-                            direction = Direction.LEFT;
-                            game.getPlayer().setDirection(Direction.LEFT);
-                        }
+                        direction = Direction.LEFT;
                         break;
                     case D:
-                        if (isAbleToMoveRight(hostSquare, x, y)) {
-                            direction = Direction.RIGHT;
-                            game.getPlayer().setDirection(Direction.RIGHT);
-                        }
+                        direction = Direction.RIGHT;
                         break;
                 }
             }
@@ -115,6 +101,8 @@ public class MovementController {
         if (isAbleToMoveUp(player, x, y)) {
             player.setTranslateY(player.getTranslateY() - STEP);
             game.getPlayer().setDirection(Direction.UP);
+        } else {
+            continueMoving(player, game.getPlayer().getDirection(), x, y);
         }
     }
 
@@ -127,6 +115,8 @@ public class MovementController {
         if (isAbleToMoveDown(player, x, y)) {
             player.setTranslateY(player.getTranslateY() + STEP);
             game.getPlayer().setDirection(Direction.DOWN);
+        } else {
+            continueMoving(player, game.getPlayer().getDirection(), x, y);
         }
     }
 
@@ -140,6 +130,8 @@ public class MovementController {
         if (isAbleToMoveLeft(player, x, y)) {
             player.setTranslateX(player.getTranslateX() - STEP);
             game.getPlayer().setDirection(Direction.LEFT);
+        } else {
+            continueMoving(player, game.getPlayer().getDirection(), x, y);
         }
     }
 
@@ -152,6 +144,8 @@ public class MovementController {
         if (isAbleToMoveRight(player, x, y)) {
             player.setTranslateX(player.getTranslateX() + STEP);
             game.getPlayer().setDirection(Direction.RIGHT);
+        } else {
+            continueMoving(player, game.getPlayer().getDirection(), x, y);
         }
     }
 
@@ -159,6 +153,23 @@ public class MovementController {
         return player.getTranslateX() < Game.WIDTH - 40
                 && walkableBoard[x + STEP + PLAYER_SIZE][y] == 'O'
                 && walkableBoard[x + STEP + PLAYER_SIZE][y + PLAYER_SIZE] == 'O';
+    }
+
+    private void continueMoving(Pane player, Direction direction, int x, int y) {
+        switch (direction) {
+            case UP:
+                if (isAbleToMoveUp(player, x, y)) player.setTranslateY(player.getTranslateY() - STEP);
+                break;
+            case DOWN:
+                if (isAbleToMoveDown(player, x, y)) player.setTranslateY(player.getTranslateY() + STEP);
+                break;
+            case RIGHT:
+                if (isAbleToMoveRight(player, x, y)) player.setTranslateX(player.getTranslateX() + STEP);
+                break;
+            case LEFT:
+                if (isAbleToMoveLeft(player, x, y)) player.setTranslateX(player.getTranslateX() - STEP);
+                break;
+        }
     }
 
     private void handleSend(NetworkConnection networkConnection) throws Exception {
