@@ -6,11 +6,11 @@ import helper.WalkableBoard;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import model.Player;
 import modes.NetworkConnection;
-
 
 public class MovementController {
 
@@ -22,7 +22,7 @@ public class MovementController {
     private Timeline timeline = new Timeline();
 
     private char[][] walkableBoard;
-    private volatile Game game;
+    private Game game;
     private HandleThreads handleThreads;
 
     public MovementController(Game game) {
@@ -43,26 +43,13 @@ public class MovementController {
         walkableBoard = board.prepareTable(game.getWalls());
         startThreads(pane, networkConnection);
 
-
         scene.setOnKeyPressed(event -> {
-            if (moved) {
-                switch (event.getCode()) {
 
-                    case W:
-                        direction = Direction.UP;
-                        break;
-                    case S:
-                        direction = Direction.DOWN;
-                        break;
-                    case A:
-                        direction = Direction.LEFT;
-                        break;
-                    case D:
-                        direction = Direction.RIGHT;
-                        break;
-                }
+            if (moved) {
+                setDesiredDirection(event);
             }
         });
+
         KeyFrame frame = new KeyFrame(Duration.seconds(0.05), event -> {
             if (networkConnection.isConnected()) {
 
@@ -70,20 +57,8 @@ public class MovementController {
                     int x = (int) hostSquare.getTranslateX();
                     int y = (int) hostSquare.getTranslateY();
 
-                    switch (direction) {
-                        case UP:
-                            checkMoveUp(hostSquare, x, y);
-                            break;
-                        case DOWN:
-                            checkMoveDown(hostSquare, x, y);
-                            break;
-                        case LEFT:
-                            checkMoveLeft(hostSquare, x, y);
-                            break;
-                        case RIGHT:
-                            checkMoveRight(hostSquare, x, y);
-                            break;
-                    }
+                    changeDirection(hostSquare, x, y);
+
                     moved = true;
                     handleSend(networkConnection);
 
@@ -95,6 +70,41 @@ public class MovementController {
 
         timeline.getKeyFrames().add(frame);
         timeline.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    private void setDesiredDirection(KeyEvent event) {
+        switch (event.getCode()) {
+
+            case W:
+                direction = Direction.UP;
+                break;
+            case S:
+                direction = Direction.DOWN;
+                break;
+            case A:
+                direction = Direction.LEFT;
+                break;
+            case D:
+                direction = Direction.RIGHT;
+                break;
+        }
+    }
+
+    private void changeDirection(Pane square, int x, int y) {
+        switch (direction) {
+            case UP:
+                checkMoveUp(square, x, y);
+                break;
+            case DOWN:
+                checkMoveDown(square, x, y);
+                break;
+            case LEFT:
+                checkMoveLeft(square, x, y);
+                break;
+            case RIGHT:
+                checkMoveRight(square, x, y);
+                break;
+        }
     }
 
     private void checkMoveUp(Pane player, int x, int y) {
@@ -158,16 +168,20 @@ public class MovementController {
     private void continueMoving(Pane player, Direction direction, int x, int y) {
         switch (direction) {
             case UP:
-                if (isAbleToMoveUp(player, x, y)) player.setTranslateY(player.getTranslateY() - STEP);
+                if (isAbleToMoveUp(player, x, y))
+                    player.setTranslateY(player.getTranslateY() - STEP);
                 break;
             case DOWN:
-                if (isAbleToMoveDown(player, x, y)) player.setTranslateY(player.getTranslateY() + STEP);
+                if (isAbleToMoveDown(player, x, y))
+                    player.setTranslateY(player.getTranslateY() + STEP);
                 break;
             case RIGHT:
-                if (isAbleToMoveRight(player, x, y)) player.setTranslateX(player.getTranslateX() + STEP);
+                if (isAbleToMoveRight(player, x, y))
+                    player.setTranslateX(player.getTranslateX() + STEP);
                 break;
             case LEFT:
-                if (isAbleToMoveLeft(player, x, y)) player.setTranslateX(player.getTranslateX() - STEP);
+                if (isAbleToMoveLeft(player, x, y))
+                    player.setTranslateX(player.getTranslateX() - STEP);
                 break;
         }
     }

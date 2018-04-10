@@ -15,8 +15,8 @@ public class Game {
     private static final int BLOCK_SIZE = 40;
     public static final int WIDTH = 17 * BLOCK_SIZE;
     public static final int HEIGHT = 17 * BLOCK_SIZE;
-    private volatile Pane hostPlayer;
-    private volatile Pane clientPlayer;
+    private Pane hostPlayer;
+    private Pane clientPlayer;
     private Player player;
     private List<Rectangle> walls;
     private List<Circle> coins;

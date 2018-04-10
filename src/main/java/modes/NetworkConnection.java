@@ -16,9 +16,9 @@ public abstract class NetworkConnection extends Thread {
     private Socket socket;
     private ServerSocket server;
     private ObjectOutputStream outputStream;
-    private volatile Game game;
+    private Game game;
     private Player player;
-    private volatile boolean connected;
+    private boolean connected;
     private boolean isRunning;
     private DirectionController directionController;
 
