@@ -24,7 +24,7 @@ public class HandleThreads implements Runnable {
     public void run() {
         while(!Thread.currentThread().isInterrupted()){
             try {
-                Thread.currentThread().sleep(10);
+                Thread.currentThread().sleep(20);
                 if (networkConnection.isConnected()){
                     coinController.checkCoins();
                     endController.checkEnd();

@@ -31,7 +31,7 @@ public class CoinController {
         });
     }
 
-    private void handleServerCoinPick(){
+    private void handleServerCoinPick() {
 
         Circle toRemove = null;
 
